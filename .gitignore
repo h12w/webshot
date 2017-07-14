@@ -1,3 +1,5 @@
-snapshot
+webshot
 *.jpg
 *.png
+*.gz
+*.html
