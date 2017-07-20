@@ -6,8 +6,10 @@ RUN apt-get update && apt-get install --yes \
     libwebkit2gtk-4.0-37 \
     fonts-wqy-microhei
 
-ADD webshot /bin
-ADD run.bash /bin/run.bash
+ADD webshotd /bin
+ADD run.bash /bin
 
 ENV DISPLAY=:0
-ENTRYPOINT /bin/run.bash
+
+EXPOSE 9191
+ENTRYPOINT  /bin/run.bash

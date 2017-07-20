@@ -1,10 +1,13 @@
 package main
 
 import (
+	"image"
 	"image/png"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"h12.me/webshot"
 )
 
 func main() {
@@ -13,8 +16,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	img, err := htmlToImage(src)
-	if err != nil {
+	img := new(image.RGBA)
+	if err := webshot.NewConv().HTMLToImage(src, img); err != nil {
 		log.Fatal(err)
 	}
 	enc := png.Encoder{CompressionLevel: png.DefaultCompression}

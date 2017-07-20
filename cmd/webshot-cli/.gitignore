@@ -1,4 +1,4 @@
-webshot
+webshot-cli
 *.jpg
 *.png
 *.gz
