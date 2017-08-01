@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install --yes \
     libwebkit2gtk-4.0-37
 
 # font
-RUN apt-get install --yes fonts-noto-cjk
+RUN apt-get install --yes fonts-noto
 
 ADD webshotd /bin
 ADD run.bash /bin
