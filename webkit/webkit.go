@@ -13,16 +13,6 @@ import (
 
 var startGTKOnce sync.Once
 
-func init() {
-	startGTKOnce.Do(func() {
-		go func() {
-			runtime.LockOSThread()
-			gtk.Init(nil)
-			gtk.Main()
-		}()
-	})
-}
-
 type (
 	Conv struct {
 		webView    *webkit2.WebView
@@ -40,6 +30,14 @@ type (
 )
 
 func NewConv() *Conv {
+	startGTKOnce.Do(func() {
+		go func() {
+			runtime.LockOSThread()
+			gtk.Init(nil)
+			gtk.Main()
+		}()
+	})
+
 	resultChan := make(chan Result)
 	webViewChan := make(chan *webkit2.WebView)
 	glib.IdleAdd(func() bool {

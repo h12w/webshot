@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install --yes \
 RUN apt-get install --yes fonts-noto
 
 ADD webshotd /bin
-ADD run.bash /bin
 
 ENV DISPLAY=:0
 EXPOSE 9191
-ENTRYPOINT  /bin/run.bash
+ENTRYPOINT  /bin/webshotd
