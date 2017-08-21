@@ -17,6 +17,7 @@ type (
 	Conv struct {
 		webView    *webkit2.WebView
 		resultChan chan Result
+		cnt        int
 		mu         sync.Mutex
 	}
 	Job struct {
@@ -37,7 +38,53 @@ func NewConv() *Conv {
 			gtk.Main()
 		}()
 	})
+	webview, resultChan := newWebview()
+	conv := &Conv{
+		webView:    webview,
+		resultChan: resultChan,
+	}
+	return conv
+}
 
+func (c *Conv) HTMLToImage(srcHTML []byte, img *image.RGBA) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.webView == nil {
+		c.webView, c.resultChan = newWebview()
+	}
+
+	glib.IdleAdd(func() bool {
+		c.webView.LoadHTML(string(srcHTML), "/src_html")
+		return false
+	})
+	result := <-c.resultChan
+	if result.Err != nil {
+		return result.Err
+	}
+	*img = *result.Img
+	c.cnt++
+	if c.cnt >= 100 {
+		c.Close()
+		c.cnt = 0
+	}
+	return nil
+
+}
+
+func (c *Conv) Close() error {
+	if c.webView != nil {
+		c.webView.Destroy()
+		c.webView = nil
+	}
+	if c.resultChan != nil {
+		close(c.resultChan)
+		c.resultChan = nil
+	}
+	return nil
+}
+
+func newWebview() (*webkit2.WebView, chan Result) {
 	resultChan := make(chan Result)
 	webViewChan := make(chan *webkit2.WebView)
 	glib.IdleAdd(func() bool {
@@ -65,31 +112,5 @@ func NewConv() *Conv {
 		webViewChan <- webView
 		return false
 	})
-	conv := &Conv{
-		webView:    <-webViewChan,
-		resultChan: resultChan,
-	}
-	return conv
-}
-
-func (c *Conv) HTMLToImage(srcHTML []byte, img *image.RGBA) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	glib.IdleAdd(func() bool {
-		c.webView.LoadHTML(string(srcHTML), "/src_html")
-		return false
-	})
-	result := <-c.resultChan
-	if result.Err != nil {
-		return result.Err
-	}
-	*img = *result.Img
-	return nil
-
-}
-
-func (c *Conv) Close() error {
-	c.webView.Destroy()
-	return nil
+	return <-webViewChan, resultChan
 }
