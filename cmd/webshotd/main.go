@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"time"
 
-	"h12.me/webshot/rpc/server"
+	"h12.io/webshot/rpc/server"
 )
 
 func main() {

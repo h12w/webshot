@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/rpc"
 
-	"h12.me/webshot/webkit"
+	"h12.io/webshot/webkit"
 )
 
 func Serve(host string) error {

@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"h12.me/webshot"
+	"h12.io/webshot"
 )
 
 func main() {

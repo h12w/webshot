@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"h12.me/webshot/rpc/client"
+	"h12.io/webshot/rpc/client"
 )
 
 func main() {

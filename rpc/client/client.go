@@ -4,7 +4,7 @@ import (
 	"image"
 	"net/rpc"
 
-	"h12.me/webshot"
+	"h12.io/webshot"
 )
 
 type (
